@@ -1,6 +1,7 @@
 # Xunit Test Logger
 Xunit logger extensions for [Visual Studio Test Platform](https://gtihub.com/microsoft/vstest).
 
+[![Build Status](https://travis-ci.com/Nipunam/xunit.testlogger.svg?branch=master)](https://travis-ci.com/Nipunam/xunit.testlogger)
 [![Build status](https://ci.appveyor.com/api/projects/status/6acdk0kx0smkcktl?svg=true)](https://ci.appveyor.com/project/Faizan2304/loggerextensions)
 
 ## Packages
