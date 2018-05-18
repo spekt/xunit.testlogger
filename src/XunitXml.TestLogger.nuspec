@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>XunitXml.TestLogger</id>
+    <version>$Version$</version>
+    <title>XunitXml.TestLogger</title>
+    <authors>Faizan2304</authors>
+    <owners>Faizan2304</owners>
+	<projectUrl>https://github.com/Faizan2304/LoggerExtensions</projectUrl>
+	<description>Xml logger for xunit when test is running with "dotnet test" or "dotnet vstest".</description>
+  </metadata>
+  <files>
+    <file src="..\nugetPackage\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger.dll" target="build\_common\" />
+    <file src="..\nugetPackage\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter.dll" target="build\_common\" />
+
+    <!-- Net Core -->
+    <file src="XunitXml.TestLogger.props" target="build\netstandard1.0\" />
+
+    <!-- Desktop -->
+    <file src="XunitXml.TestLogger.props" target="build\net45\" />
+  </files>
+</package>
