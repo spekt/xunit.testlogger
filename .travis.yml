@@ -1,0 +1,11 @@
+language: csharp
+
+matrix:
+    include:
+        - dotnet: 2.0.0
+          mono: none
+
+solution: xunit.testlogger.sln
+
+script:
+    - dotnet build
