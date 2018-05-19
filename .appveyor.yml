@@ -4,7 +4,7 @@ image: Visual Studio 2017
 clone_depth: 1
 
 build_script:
-  - cmd: dotnet build
+  - cmd: dotnet pack
 
 deploy: off
 

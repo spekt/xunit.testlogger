@@ -8,4 +8,4 @@ matrix:
 solution: xunit.testlogger.sln
 
 script:
-    - dotnet build
+    - dotnet pack
