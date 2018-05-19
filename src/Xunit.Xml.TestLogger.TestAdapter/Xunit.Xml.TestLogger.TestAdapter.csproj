@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <AssemblyName>Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter</AssemblyName>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

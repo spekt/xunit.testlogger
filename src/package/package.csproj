@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard1.5</TargetFramework>
+    <Version>1.0.0</Version>
+    <AssemblyName>XunitXml.TestLogger</AssemblyName>
+
+    <!-- This isn't an assembly -->
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+
+    <!-- Don't create outputs during build or publish -->
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
+    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
+
+    <!-- Disable warning that there are no source files. It is intentional. -->
+    <NoWarn>$(NoWarn);2008</NoWarn>
+
+    <!-- Nuget pack configuration -->
+    <NuspecFile>bin\$(Configuration)\$(TargetFramework)\XunitXml.TestLogger.nuspec</NuspecFile>
+    <NuspecProperties>version=$(Version)</NuspecProperties>
+    <IncludeContentInPack>false</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xunit.Xml.TestLogger\Xunit.Xml.TestLogger.csproj" />
+    <ProjectReference Include="..\Xunit.Xml.TestLogger.TestAdapter\Xunit.Xml.TestLogger.TestAdapter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="XunitXml.TestLogger.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XunitXml.TestLogger.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--<Target Name="AfterBuild">-->
+    <!--<Copy SourceFiles="XunitXml.TestLogger.props" DestinationFolder="build\netstandard1.0" SkipUnchangedFiles="true" />-->
+    <!--<Copy SourceFiles="XunitXml.TestLogger.props" DestinationFolder="build\net45" SkipUnchangedFiles="true" />-->
+  <!--</Target>-->
+
+  <!-- Prevent Csc from being called -->
+  <Target Name="CoreCompile" />
+</Project>
