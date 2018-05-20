@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<assemblies timestamp="05/20/2018 14:09:21">
+  <assembly name="C:\Users\samadala\src\public\xunit.testlogger\test\Xunit.Xml.TestLogger.NetFull.Tests\bin\Debug\net46\Xunit.Xml.TestLogger.NetFull.Tests.dll" run-date="2018-05-20" run-time="14:09:21" total="4" passed="2" failed="2" skipped="0" time="0.110" errors="0">
+    <errors />
+    <collection total="2" passed="1" failed="1" skipped="0" name="Test collection for Xunit.Xml.TestLogger.NetFull.Tests.UnitTest1" time="0.050">
+      <test name="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest1.PassTest11" type="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest1" method="PassTest11" time="0.0040000" result="Pass">
+        <traits />
+      </test>
+      <test name="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest1.FailTest11" type="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest1" method="FailTest11" time="0.0460000" result="Fail">
+        <failure>
+          <message>Assert.False() Failure
+Expected: False
+Actual:   True</message>
+          <stack-trace></stack-trace>
+        </failure>
+        <traits />
+      </test>
+    </collection>
+    <collection total="2" passed="1" failed="1" skipped="0" name="Test collection for Xunit.Xml.TestLogger.NetFull.Tests.UnitTest2" time="0.060">
+      <test name="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest2.PAssTest21" type="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest2" method="PAssTest21" time="0.0590000" result="Pass">
+        <traits />
+      </test>
+      <test name="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest2.FailTest22" type="Xunit.Xml.TestLogger.NetFull.Tests.UnitTest2" method="FailTest22" time="0.0010000" result="Fail">
+        <failure>
+          <message>Assert.False() Failure
+Expected: False
+Actual:   True</message>
+          <stack-trace></stack-trace>
+        </failure>
+        <traits />
+      </test>
+    </collection>
+  </assembly>
+</assemblies>
