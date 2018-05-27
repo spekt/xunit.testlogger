@@ -9,6 +9,7 @@ dotnet restore -p:"LoggerVersion=1.0.0-dev" --configfile Nuget.config
 dotnet build --no-restore
 dotnet test --no-build ./test/Xunit.Xml.TestLogger.NetCore.Tests/ --logger:"xunit;LogFilePath=test-results.xml"
 dotnet test --no-build ./test/Xunit.Xml.TestLogger.NetFull.Tests/ --logger:"xunit;LogFilePath=test-results.xml"
+dotnet test --no-build ./test/Xunit.Xml.TestLogger.AcceptanceTests/
 
-# Todo add validation 
+# TODO fail the build on error while running any of above commands.
 
