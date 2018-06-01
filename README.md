@@ -21,10 +21,10 @@ Xunit logger can generate xml reports in the xunit v2 format (https://xunit.gith
 
 A path for the report file can be specified as follows:
 ```
-> dotnet test --test-adapter-path:. --logger:xunit;LogFilePath=loggerFile.xml
+> dotnet test --test-adapter-path:. --logger:xunit;LogFilePath=test_result.xml
 ```
 
-`loggerFile.xml` will be generated in the same directory as `test.csproj`.
+`test_result.xml` will be generated in the same directory as `test.csproj`.
 
 ## LICENSE
 MIT
