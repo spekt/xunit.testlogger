@@ -7,10 +7,13 @@ build_script:
     - cmd: dotnet pack
     - cmd: dotnet pack -c Release
 
+artifacts:
+    - path: 'src\package\bin\Release\*.nupkg'
+
 deploy:
     provider: NuGet
-    server: https://www.myget.org/F/spekt/api/v3/index.json
+    server: https://www.myget.org/F/spekt/api/v2
     api_key:
         secure: 2C7HbSlU1kcOJ3nzZCpKR97cfWAg/8t38XDf8ywCbJI1ymt93ulfPqT67ugWuMla
-    artifact: /src/package/bin/Release/.*\.nupkg/
+    artifact: /.*\.nupkg/
     skip_symbols: true
