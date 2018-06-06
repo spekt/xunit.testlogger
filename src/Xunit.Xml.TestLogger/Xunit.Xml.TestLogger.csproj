@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../scripts/version.props" />
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <AssemblyName>Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger</AssemblyName>
+    <Version>$(PackageVersion)</Version>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

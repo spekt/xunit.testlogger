@@ -1,11 +1,11 @@
-version: '2.0.{build}'
+version: '2.1.{build}'
 image: Visual Studio 2017
 
 clone_depth: 1
 
 build_script:
-    - cmd: dotnet pack
-    - cmd: dotnet pack -c Release
+    - cmd: dotnet pack -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+    - cmd: dotnet pack -c Release -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 
 artifacts:
     - path: 'src\package\bin\Release\*.nupkg'
