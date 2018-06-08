@@ -1,13 +1,14 @@
 # Xunit Test Logger
 Xunit logger extensions for [Visual Studio Test Platform](https://gtihub.com/microsoft/vstest).
 
-[![Build Status](https://travis-ci.com/Nipunam/xunit.testlogger.svg?branch=master)](https://travis-ci.com/Nipunam/xunit.testlogger)
-[![Build status](https://ci.appveyor.com/api/projects/status/rac9mgpdslmffoqd?svg=true)](https://ci.appveyor.com/project/Nipunam/xunit-testlogger)
+[![Build Status](https://travis-ci.com/spekt/xunit.testlogger.svg?branch=master)](https://travis-ci.com/spekt/xunit.testlogger)
+[![Build status](https://ci.appveyor.com/api/projects/status/73iw12g89lhlr9ir?svg=true)](https://ci.appveyor.com/project/spekt/xunit-testlogger)
 
 ## Packages
-| Logger | Nuget Package |
-| ------ | ------------- |
-| Xunit | [![NuGet](https://img.shields.io/nuget/v/XunitXml.TestLogger.svg)](https://www.nuget.org/packages/XunitXml.TestLogger/) |
+| Logger | Stable Package | Pre-release Package |
+| ------ | -------------- | ------------------- |
+| Xunit | [![NuGet](https://img.shields.io/nuget/v/XunitXml.TestLogger.svg)](https://www.nuget.org/packages/XunitXml.TestLogger/) | [![MyGet Pre Release](https://img.shields.io/myget/spekt/vpre/xunitxml.testlogger.svg)](https://www.myget.org/feed/spekt/package/nuget/XunitXml.TestLogger) |
+
 
 ## Usage
 Xunit logger can generate xml reports in the xunit v2 format (https://xunit.github.io/docs/format-xml-v2.html).
@@ -21,10 +22,10 @@ Xunit logger can generate xml reports in the xunit v2 format (https://xunit.gith
 
 A path for the report file can be specified as follows:
 ```
-> dotnet test --test-adapter-path:. --logger:xunit;LogFilePath=loggerFile.xml
+> dotnet test --test-adapter-path:. --logger:xunit;LogFilePath=test_result.xml
 ```
 
-`loggerFile.xml` will be generated in the same directory as `test.csproj`.
+`test_result.xml` will be generated in the same directory as `test.csproj`.
 
 ## LICENSE
 MIT

@@ -1,10 +1,19 @@
-version: '2.0.{build}'
+version: '2.1.{build}'
 image: Visual Studio 2017
 
 clone_depth: 1
 
 build_script:
-  - cmd: ./test.sh
+    - cmd: dotnet pack -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+    - cmd: dotnet pack -c Release -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 
-deploy: off
+artifacts:
+    - path: 'src\package\bin\Release\*.nupkg'
 
+deploy:
+    provider: NuGet
+    server: https://www.myget.org/F/spekt/api/v2
+    api_key:
+        secure: 2C7HbSlU1kcOJ3nzZCpKR97cfWAg/8t38XDf8ywCbJI1ymt93ulfPqT67ugWuMla
+    artifact: /.*\.nupkg/
+    skip_symbols: true
