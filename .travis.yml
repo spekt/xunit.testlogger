@@ -2,7 +2,7 @@ language: csharp
 
 matrix:
     include:
-        - dotnet: latest
+        - dotnet: 2.1.0
           mono: latest
 
 solution: xunit.testlogger.sln
