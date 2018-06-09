@@ -3,11 +3,10 @@ language: csharp
 matrix:
     include:
         - dotnet: 2.0.0
-          mono: none
+          mono: latest
 
 solution: xunit.testlogger.sln
 
 script:
     - dotnet pack
-    - dotnet build
     - dotnet test test/Xunit.Xml.TestLogger.AcceptanceTests/Xunit.Xml.TestLogger.AcceptanceTests.csproj
