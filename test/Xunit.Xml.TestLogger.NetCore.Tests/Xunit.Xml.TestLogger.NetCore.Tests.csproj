@@ -3,8 +3,7 @@
   <Import Project="../../scripts/version.props" />
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
-    <!--<PackageVersion>2.0.0</PackageVersion>-->
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

@@ -10,4 +10,4 @@ solution: xunit.testlogger.sln
 script:
     - dotnet pack
     - dotnet build
-    #- dotnet test test/Xunit.Xml.TestLogger.AcceptanceTests/Xunit.Xml.TestLogger.AcceptanceTests.csproj
+    - dotnet test test/Xunit.Xml.TestLogger.AcceptanceTests/Xunit.Xml.TestLogger.AcceptanceTests.csproj

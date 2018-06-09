@@ -14,19 +14,11 @@
   </ItemGroup>
 
   <!-- Build test assets for acceptance tests -->
-  <ItemGroup>
-    <ProjectToBuild Include="../Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj">
-      <Properties>Configuration=$(Configuration);RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration)</Properties>
-    </ProjectToBuild>
-    <ProjectToBuild Include="../Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj">
-      <Properties>Configuration=$(Configuration);RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration)</Properties>
-    </ProjectToBuild>
-  </ItemGroup>
   <Target Name="TestTarget" AfterTargets="Build">
     <Message Importance="High" Text="... Building test assets" />
     <RemoveDir Directories="$(NuGetPackageRoot)/xunitxml.testlogger" />
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Restore" />
-    <MSBuild Projects="@(ProjectToBuild)" />
+    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration) ../Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj"/>
+    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration) ../Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj"/>
     <Message Importance="High" Text="... Completed" />
   </Target>
 </Project>
