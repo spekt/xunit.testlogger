@@ -8,21 +8,23 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
     {
         public DotnetTestFixture()
         {
-            var testLogger = " --logger:'xunit;LogFilePath=test-results.xml'";
-            var testProject = Path.Combine(Environment.CurrentDirectory, "../../../../Xunit.Xml.TestLogger.NetCore.Tests");
+            var testProject = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Xunit.Xml.TestLogger.NetCore.Tests"));
+            var testLogger = $"--logger 'xunit;LogFilePath=test-results.xml'";
             using (var p = new Process())
             {
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.FileName = "dotnet";
-                p.StartInfo.Arguments = "test --no-build " + testProject + testLogger;
+                p.StartInfo.Arguments = $"test --no-build {testLogger} {testProject}";
                 p.Start();
 
                 // To avoid deadlocks, always read the output stream first and then wait.
                 string output = p.StandardOutput.ReadToEnd();
                 p.WaitForExit();
-                Console.WriteLine(testProject);
-                Console.WriteLine(output);
+                Console.WriteLine("------------");
+                Console.WriteLine("dotnet arguments: " + p.StartInfo.Arguments);
+                Console.WriteLine("dotnet output: " + output);
+                Console.WriteLine("------------");
             }
         }
 
