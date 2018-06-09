@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <WarningsAsErrors>true</WarningsAsErrors>
+    <EnableCodeAnalysis>true</EnableCodeAnalysis>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+  <!-- Build test assets for acceptance tests -->
+  <Target Name="TestTarget" AfterTargets="Build">
+    <Message Importance="High" Text="... Building test assets" />
+    <RemoveDir Directories="$(NuGetPackageRoot)/xunitxml.testlogger" />
+    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration) ../Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj"/>
+    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration) ../Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj"/>
+    <Message Importance="High" Text="... Completed" />
+  </Target>
+</Project>
