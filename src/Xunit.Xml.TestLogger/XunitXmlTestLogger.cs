@@ -533,7 +533,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                     return "Pass";
 
                 case TestOutcome.Skipped:
-                    return "Skipped";
+                    return "Skip";
 
                 default:
                     return "Unknown";
