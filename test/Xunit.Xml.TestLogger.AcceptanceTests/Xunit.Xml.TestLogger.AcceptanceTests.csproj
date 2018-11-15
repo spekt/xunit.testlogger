@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <SourceRoot Condition="$(SourceRoot) == ''">..\..\</SourceRoot>
+    <TestProject>true</TestProject>
+  </PropertyGroup>
+  <Import Project="$(SourceRoot)scripts/settings.targets" />
+
+  <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <WarningsAsErrors>true</WarningsAsErrors>
     <EnableCodeAnalysis>true</EnableCodeAnalysis>
@@ -14,11 +20,16 @@
   </ItemGroup>
 
   <!-- Build test assets for acceptance tests -->
+  <PropertyGroup>
+    <TestRestoreConfig>$(MSBuildThisFileDirectory)../assets/NuGet.$(Configuration).config</TestRestoreConfig>
+    <TestFullProject>$(MSBuildThisFileDirectory)../assets/Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj</TestFullProject>
+    <TestCoreProject>$(MSBuildThisFileDirectory)../assets/Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj</TestCoreProject>
+  </PropertyGroup>
   <Target Name="TestTarget" AfterTargets="Build">
     <Message Importance="High" Text="... Building test assets" />
     <RemoveDir Directories="$(NuGetPackageRoot)/xunitxml.testlogger" />
-    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration) ../Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj"/>
-    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:RestoreSources=$(MSBuildThisFileDirectory)../../src/package/bin/$(Configuration) ../Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj"/>
+    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:PackageVersion=$(PackageVersion) -p:RestoreConfigFile=$(TestRestoreConfig) -p:RestoreIgnoreFailedSources=true -p:RestoreNoCache=true $(TestCoreProject)"/>
+    <Exec ContinueOnError="False" Command="dotnet build -c $(Configuration) -p:PackageVersion=$(PackageVersion) -p:RestoreConfigFile=$(TestRestoreConfig) -p:RestoreIgnoreFailedSources=true -p:RestoreNoCache=true $(TestFullProject)"/>
     <Message Importance="High" Text="... Completed" />
   </Target>
 </Project>

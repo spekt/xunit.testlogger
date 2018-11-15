@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../scripts/version.props" />
+  <Import Project="../../../scripts/version.props" />
 
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
