@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../scripts/version.props" />
+
+  <PropertyGroup>
+    <SourceRoot Condition="$(SourceRoot) == ''">..\..\</SourceRoot>
+  </PropertyGroup>
+  <Import Project="$(SourceRoot)scripts/settings.targets" />
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
