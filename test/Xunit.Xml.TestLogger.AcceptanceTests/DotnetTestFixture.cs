@@ -1,3 +1,6 @@
+// Copyright (c) Spekt Contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 namespace Xunit.Xml.TestLogger.AcceptanceTests
 {
     using System;
@@ -8,7 +11,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
     {
         public DotnetTestFixture()
         {
-            var testProject = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "Xunit.Xml.TestLogger.NetCore.Tests"));
+            var testProject = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "assets", "Xunit.Xml.TestLogger.NetCore.Tests"));
             var testLogger = $"--logger:\"xunit;LogFilePath=test-results.xml\"";
 
             // Delete stale results file
@@ -25,6 +28,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             {
                 Console.WriteLine("  " + f);
             }
+
             Console.WriteLine();
 
             // Run dotnet test with logger
@@ -37,6 +41,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
                 p.Start();
 
                 Console.WriteLine("dotnet arguments: " + p.StartInfo.Arguments);
+
                 // To avoid deadlocks, always read the output stream first and then wait.
                 string output = p.StandardOutput.ReadToEnd();
                 p.WaitForExit();

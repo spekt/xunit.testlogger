@@ -9,7 +9,6 @@ Xunit logger extensions for [Visual Studio Test Platform](https://gtihub.com/mic
 | ------ | -------------- | ------------------- |
 | Xunit | [![NuGet](https://img.shields.io/nuget/v/XunitXml.TestLogger.svg)](https://www.nuget.org/packages/XunitXml.TestLogger/) | [![MyGet Pre Release](https://img.shields.io/myget/spekt/vpre/xunitxml.testlogger.svg)](https://www.myget.org/feed/spekt/package/nuget/XunitXml.TestLogger) |
 
-
 ## Usage
 Xunit logger can generate xml reports in the xunit v2 format (https://xunit.github.io/docs/format-xml-v2.html).
 
@@ -29,5 +28,5 @@ A path for the report file can be specified as follows:
 
 **Note:** the arguments to `--logger` should be in quotes since `;` is treated as a command delimiter in shell.
 
-## LICENSE
+## License
 MIT

@@ -1,6 +1,10 @@
+// Copyright (c) Spekt Contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 namespace Xunit.Xml.TestLogger.AcceptanceTests
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -27,6 +31,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
                 "..",
                 "..",
                 "..",
+                "assets",
                 "Xunit.Xml.TestLogger.NetCore.Tests",
                 "test-results.xml");
             this.testResultsXmlDocument = new XmlDocument();
@@ -55,7 +60,8 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             var assembliesNodes = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssembliesElement);
 
             // Should not throw FormatException.
-            var timestamp = Convert.ToDateTime(assembliesNodes.Attributes["timestamp"].Value);
+            var timestamp = assembliesNodes.Attributes["timestamp"].Value;
+            Convert.ToDateTime(timestamp, CultureInfo.InvariantCulture);
         }
 
         [Fact]
@@ -239,7 +245,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementTypeAttributeShouldHaveCorrectValue()
         {
-            XmlNode failedTestXmlNode = GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
 
             Assert.Equal("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1", failedTestXmlNode.Attributes["type"].Value);
         }
@@ -247,7 +253,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementMethodAttributeShouldHaveCorrectValue()
         {
-            XmlNode failedTestXmlNode = GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
 
             Assert.Equal("FailTest11", failedTestXmlNode.Attributes["method"].Value);
         }
@@ -255,7 +261,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementTimeAttributeShouldHaveValidFormatValue()
         {
-            XmlNode failedTestXmlNode = GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
 
             Regex regex = new Regex(@"^\d{1,}\.\d{7,7}$");
 
@@ -265,16 +271,16 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementShouldHaveTraits()
         {
-            XmlNode failedTestXmlNode = GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
 
-            //TODO add traits to tests and update the assert.
+            // TODO add traits to tests and update the assert.
             Assert.Equal(string.Empty, failedTestXmlNode.SelectSingleNode("traits").InnerText);
         }
 
         [Fact]
         public void FailedTestElementResultAttributeShouldHaveValueFail()
         {
-            XmlNode failedTestXmlNode = GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
 
             Assert.Equal("Fail", failedTestXmlNode.Attributes["result"].Value);
         }
@@ -282,7 +288,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void PassedTestElementResultAttributeShouldHaveValuePass()
         {
-            XmlNode passedTestXmlNode = GetFailedTestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.PassTest11");
+            XmlNode passedTestXmlNode = this.GetFailedTestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.PassTest11");
 
             Assert.Equal("Pass", passedTestXmlNode.Attributes["result"].Value);
         }
@@ -290,7 +296,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void FailedTestElementShouldContainsFailureDetails()
         {
-            XmlNode failedTestXmlNode = GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
 
             var failureNodeList = failedTestXmlNode.SelectNodes("failure");
 
