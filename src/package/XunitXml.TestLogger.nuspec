@@ -8,7 +8,7 @@
     <owners>codito,faizan2304,smadala</owners>
     <projectUrl>https://github.com/spekt/xunit.testlogger</projectUrl>
     <description>Xml logger for xunit when test is running with "dotnet test" or "dotnet vstest".</description>
-    <licenseUrl>https://github.com/spekt/xunit.testlogger/blob/master/LICENSE</licenseUrl>
+    <license type="expression">MIT</license>
   </metadata>
   <files>
     <file src="Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger.dll" target="build\_common\" />
