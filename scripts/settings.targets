@@ -23,6 +23,9 @@
     -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
+
+    <!-- Show full paths for the warnings and errors -->
+    <GenerateFullPaths>true</GenerateFullPaths>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

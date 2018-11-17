@@ -1,22 +1,25 @@
-﻿
+﻿// Copyright (c) Spekt Contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
     using System.Xml.Linq;
+
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-    using System.Text;
-    using System.Collections.ObjectModel;
-    using System.Text.RegularExpressions;
 
     [FriendlyName(FriendlyName)]
     [ExtensionUri(ExtensionUri)]
-    class XunitXmlTestLogger : ITestLoggerWithParameters
+    public class XunitXmlTestLogger : ITestLoggerWithParameters
     {
         /// <summary>
         /// Uri used to uniquely identify the logger.
@@ -32,14 +35,6 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         public const string EnvironmentKey = "Environment";
         public const string XUnitVersionKey = "XUnitVersion";
 
-        private string outputFilePath;
-        private string environmentOpt;
-        private string xunitVersionOpt;
-
-        private readonly object resultsGuard = new object();
-        private List<TestResultInfo> results;
-        private DateTime localStartTime;
-
         private static List<string> errorTypes = new List<string>
         {
             "Test Assembly Cleanup Failure",
@@ -52,71 +47,25 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
         private static Dictionary<string, string> errorTypeKeyValuePair = new Dictionary<string, string>
         {
-            {"Test Assembly Cleanup Failure", "assembly-cleanup"},
-            {"Test Collection Cleanup Failure", "test-collection-cleanup"},
-            {"Test Class Cleanup Failure", "test-class-cleanup" },
-            {"Test Case Cleanup Failure", "test-case-cleanup"},
-            {"Test Cleanup Failure", "test-cleanup"},
-            {"Test Method Cleanup Failure", "test-method-cleanup"}
+            { "Test Assembly Cleanup Failure", "assembly-cleanup" },
+            { "Test Collection Cleanup Failure", "test-collection-cleanup" },
+            { "Test Class Cleanup Failure", "test-class-cleanup" },
+            { "Test Case Cleanup Failure", "test-case-cleanup" },
+            { "Test Cleanup Failure", "test-cleanup" },
+            { "Test Method Cleanup Failure", "test-method-cleanup" }
         };
 
-        // Disabling warning CS0659: 'XunitXmlTestLogger.TestResultInfo' overrides Object.Equals(object o) but does not override Object.GetHashCode()
-        // As this is a false alarm here.
-#pragma warning disable 0659
-        private class TestResultInfo
-        {
-            public readonly TestCase TestCase;
-            public readonly TestOutcome Outcome;
-            public readonly string AssemblyPath;
-            public readonly string Type;
-            public readonly string Method;
-            public readonly string Name;
-            public readonly TimeSpan Time;
-            public readonly string ErrorMessage;
-            public readonly string ErrorStackTrace;
-            public readonly Collection<TestResultMessage> Messages;
-            public readonly TraitCollection Traits;
+        private readonly object resultsGuard = new object();
 
-            public TestResultInfo(
-                TestCase testCase,
-                TestOutcome outcome,
-                string assemblyPath,
-                string type,
-                string method,
-                string name,
-                TimeSpan time,
-                string errorMessage,
-                string errorStackTrace,
-                Collection<TestResultMessage> messages,
-                TraitCollection traits)
-            {
-                TestCase = testCase;
-                Outcome = outcome;
-                AssemblyPath = assemblyPath;
-                Type = type;
-                Method = method;
-                Name = name;
-                Time = time;
-                ErrorMessage = errorMessage;
-                ErrorStackTrace = errorStackTrace;
-                Messages = messages;
-                Traits = traits;
-            }
+        private string outputFilePath;
 
-            public override bool Equals(object obj)
-            {
-                if (obj is TestResultInfo)
-                {
-                    TestResultInfo objectToCompare = (TestResultInfo)obj;
-                    if (string.Compare(this.ErrorMessage, objectToCompare.ErrorMessage) == 0 && string.Compare(this.ErrorStackTrace, objectToCompare.ErrorStackTrace) == 0)
-                    {
-                        return true;
-                    }
-                }
+        private string environmentOpt;
 
-                return false;
-            }
-        }
+        private string xunitVersionOpt;
+
+        private List<TestResultInfo> results;
+
+        private DateTime localStartTime;
 
 #pragma warning restore 0659
 
@@ -133,7 +82,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             }
 
             var outputPath = Path.Combine(testResultsDirPath, "TestResults.xml");
-            InitializeImpl(events, outputPath);
+            this.InitializeImpl(events, outputPath);
         }
 
         public void Initialize(TestLoggerEvents events, Dictionary<string, string> parameters)
@@ -150,35 +99,19 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
             if (parameters.TryGetValue(LogFilePathKey, out string outputPath))
             {
-                InitializeImpl(events, outputPath);
+                this.InitializeImpl(events, outputPath);
             }
             else if (parameters.TryGetValue(DefaultLoggerParameterNames.TestRunDirectory, out string outputDir))
             {
-                Initialize(events, outputDir);
+                this.Initialize(events, outputDir);
             }
             else
             {
                 throw new ArgumentException($"Expected {LogFilePathKey} or {DefaultLoggerParameterNames.TestRunDirectory} parameter", nameof(parameters));
             }
 
-            parameters.TryGetValue(EnvironmentKey, out environmentOpt);
-            parameters.TryGetValue(XUnitVersionKey, out xunitVersionOpt);
-        }
-
-        private void InitializeImpl(TestLoggerEvents events, string outputPath)
-        {
-            events.TestRunMessage += TestMessageHandler;
-            events.TestResult += TestResultHandler;
-            events.TestRunComplete += TestRunCompleteHandler;
-
-            outputFilePath = Path.GetFullPath(outputPath);
-
-            lock (resultsGuard)
-            {
-                results = new List<TestResultInfo>();
-            }
-
-            localStartTime = DateTime.Now;
+            parameters.TryGetValue(EnvironmentKey, out this.environmentOpt);
+            parameters.TryGetValue(XUnitVersionKey, out this.xunitVersionOpt);
         }
 
         /// <summary>
@@ -197,9 +130,9 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
             if (TryParseName(result.TestCase.FullyQualifiedName, out var typeName, out var methodName, out _))
             {
-                lock (resultsGuard)
+                lock (this.resultsGuard)
                 {
-                    results.Add(new TestResultInfo(
+                    this.results.Add(new TestResultInfo(
                         result.TestCase,
                         result.Outcome,
                         result.TestCase.Source,
@@ -221,111 +154,28 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         internal void TestRunCompleteHandler(object sender, TestRunCompleteEventArgs e)
         {
             List<TestResultInfo> resultList;
-            lock (resultsGuard)
+            lock (this.resultsGuard)
             {
-                resultList = results;
-                results = new List<TestResultInfo>();
+                resultList = this.results;
+                this.results = new List<TestResultInfo>();
             }
 
-            var doc = new XDocument(CreateAssembliesElement(resultList));
+            var doc = new XDocument(this.CreateAssembliesElement(resultList));
 
             // Create directory if not exist
-            var loggerFileDirPath = Path.GetDirectoryName(outputFilePath);
+            var loggerFileDirPath = Path.GetDirectoryName(this.outputFilePath);
             if (!Directory.Exists(loggerFileDirPath))
             {
                 Directory.CreateDirectory(loggerFileDirPath);
             }
 
-            using (var f = File.Create(outputFilePath))
+            using (var f = File.Create(this.outputFilePath))
             {
                 doc.Save(f);
             }
 
-            String resultsFileMessage = String.Format(CultureInfo.CurrentCulture, "Results File: {0}", outputFilePath);
+            var resultsFileMessage = string.Format(CultureInfo.CurrentCulture, "Results File: {0}", this.outputFilePath);
             Console.WriteLine(resultsFileMessage);
-        }
-
-        private XElement CreateAssembliesElement(List<TestResultInfo> results)
-        {
-            var element = new XElement("assemblies",
-                from result in results
-                group result by result.AssemblyPath into resultsByAssembly
-                orderby resultsByAssembly.Key
-                select CreateAssemblyElement(resultsByAssembly));
-
-            element.SetAttributeValue("timestamp", localStartTime.ToString(CultureInfo.InvariantCulture));
-
-            return element;
-        }
-
-        private XElement CreateAssemblyElement(IGrouping<string, TestResultInfo> resultsByAssembly)
-        {
-            List<TestResultInfo> testResultAsError = new List<TestResultInfo>();
-            var assemblyPath = resultsByAssembly.Key;
-
-            var collections = from resultsInAssembly in resultsByAssembly
-                              group resultsInAssembly by resultsInAssembly.Type into resultsByType
-                              orderby resultsByType.Key
-                              select CreateCollection(resultsByType, testResultAsError);
-
-            int total = 0;
-            int passed = 0;
-            int failed = 0;
-            int skipped = 0;
-            int errors = 0;
-            var time = TimeSpan.Zero;
-
-            var element = new XElement("assembly");
-            XElement errorsElement = new XElement("errors");
-            element.Add(errorsElement);
-
-            foreach (var collection in collections)
-            {
-                total += collection.total;
-                passed += collection.passed;
-                failed += collection.failed;
-                skipped += collection.skipped;
-                errors += collection.error;
-                time += collection.time;
-
-                element.Add(collection.element);
-            }
-
-            // Handle errors
-            foreach (var error in testResultAsError)
-            {
-                errorsElement.Add(CreateErrorElement(error));
-            }
-
-            element.SetAttributeValue("name", assemblyPath);
-
-            if (environmentOpt != null)
-            {
-                element.SetAttributeValue("environment", environmentOpt);
-            }
-
-            if (xunitVersionOpt != null)
-            {
-                element.SetAttributeValue("test-framework", "xUnit.net " + xunitVersionOpt);
-            }
-
-            element.SetAttributeValue("run-date", localStartTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-            element.SetAttributeValue("run-time", localStartTime.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
-
-            var configFile = assemblyPath + ".config";
-            if (File.Exists(configFile))
-            {
-                element.SetAttributeValue("config-file", configFile);
-            }
-
-            element.SetAttributeValue("total", total);
-            element.SetAttributeValue("passed", passed);
-            element.SetAttributeValue("failed", failed);
-            element.SetAttributeValue("skipped", skipped);
-            element.SetAttributeValue("time", time.TotalSeconds.ToString("N3", CultureInfo.InvariantCulture));
-            element.SetAttributeValue("errors", errors);
-
-            return element;
         }
 
         private static XElement CreateErrorElement(TestResultInfo result)
@@ -385,8 +235,10 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                                 error++;
                                 testResultAsError.Add(result);
                             }
+
                             continue;
                         }
+
                         failed++;
                         break;
 
@@ -434,7 +286,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
         private static XElement CreateTestElement(TestResultInfo result)
         {
-            var element = new XElement("test",
+            var element = new XElement(
+                "test",
                 new XAttribute("name", result.Name),
                 new XAttribute("type", result.Type),
                 new XAttribute("method", result.Method),
@@ -464,16 +317,17 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
             if (result.Outcome == TestOutcome.Failed)
             {
-                element.Add(new XElement("failure",
+                element.Add(new XElement(
+                    "failure",
                     new XElement("message", RemoveInvalidXmlChar(result.ErrorMessage)),
                     new XElement("stack-trace", RemoveInvalidXmlChar(result.ErrorStackTrace))));
             }
 
             if (result.Traits != null)
             {
-                element.Add(new XElement("traits",
-                    from trait in result.Traits
-                    select new XElement("trait", new XAttribute("name", trait.Name), new XAttribute("value", trait.Value))));
+                var traits = from trait in result.Traits
+                             select new XElement("trait", new XAttribute("name", trait.Name), new XAttribute("value", trait.Value));
+                element.Add(new XElement("traits", traits));
             }
 
             return element;
@@ -481,9 +335,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
         private static bool TryParseName(string testCaseName, out string metadataTypeName, out string metadataMethodName, out string metadataMethodArguments)
         {
-            // This is fragile. The FQN is constructed by a test adapter. 
+            // This is fragile. The FQN is constructed by a test adapter.
             // There is no enforcement that the FQN starts with metadata type name.
-
             string typeAndMethodName;
             var methodArgumentsStart = testCaseName.IndexOf('(');
 
@@ -509,8 +362,9 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             var typeNameLength = typeAndMethodName.LastIndexOf('.');
             var methodNameStart = typeNameLength + 1;
 
-            if (typeNameLength <= 0 || methodNameStart == typeAndMethodName.Length) // No typeName is available
+            if (typeNameLength <= 0 || methodNameStart == typeAndMethodName.Length)
             {
+                // No typeName is available
                 metadataTypeName = null;
                 metadataMethodName = null;
                 metadataMethodArguments = null;
@@ -544,8 +398,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         {
             if (str != null)
             {
-                // From xml spec (http://www.w3.org/TR/xml/#charsets) valid chars: 
-                // #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]  
+                // From xml spec (http://www.w3.org/TR/xml/#charsets) valid chars:
+                // #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
 
                 // we are handling only #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD]
                 // because C# support unicode character in range \u0000 to \uFFFF
@@ -559,9 +413,106 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
         private static string ReplaceInvalidCharacterWithUniCodeEscapeSequence(Match match)
         {
-            char x = match.Value[0];
-            return String.Format(@"\u{0:x4}", (ushort)x);
+            return string.Format(@"\u{0:x4}", (ushort)match.Value[0]);
+        }
+
+        private void InitializeImpl(TestLoggerEvents events, string outputPath)
+        {
+            events.TestRunMessage += this.TestMessageHandler;
+            events.TestResult += this.TestResultHandler;
+            events.TestRunComplete += this.TestRunCompleteHandler;
+
+            this.outputFilePath = Path.GetFullPath(outputPath);
+
+            lock (this.resultsGuard)
+            {
+                this.results = new List<TestResultInfo>();
+            }
+
+            this.localStartTime = DateTime.Now;
+        }
+
+        private XElement CreateAssembliesElement(List<TestResultInfo> results)
+        {
+            var assemblies = from result in results
+                             group result by result.AssemblyPath into resultsByAssembly
+                             orderby resultsByAssembly.Key
+                             select this.CreateAssemblyElement(resultsByAssembly);
+            var element = new XElement("assemblies", assemblies);
+
+            element.SetAttributeValue("timestamp", this.localStartTime.ToString(CultureInfo.InvariantCulture));
+
+            return element;
+        }
+
+        private XElement CreateAssemblyElement(IGrouping<string, TestResultInfo> resultsByAssembly)
+        {
+            List<TestResultInfo> testResultAsError = new List<TestResultInfo>();
+            var assemblyPath = resultsByAssembly.Key;
+
+            var collections = from resultsInAssembly in resultsByAssembly
+                              group resultsInAssembly by resultsInAssembly.Type into resultsByType
+                              orderby resultsByType.Key
+                              select CreateCollection(resultsByType, testResultAsError);
+
+            int total = 0;
+            int passed = 0;
+            int failed = 0;
+            int skipped = 0;
+            int errors = 0;
+            var time = TimeSpan.Zero;
+
+            var element = new XElement("assembly");
+            XElement errorsElement = new XElement("errors");
+            element.Add(errorsElement);
+
+            foreach (var collection in collections)
+            {
+                total += collection.total;
+                passed += collection.passed;
+                failed += collection.failed;
+                skipped += collection.skipped;
+                errors += collection.error;
+                time += collection.time;
+
+                element.Add(collection.element);
+            }
+
+            // Handle errors
+            foreach (var error in testResultAsError)
+            {
+                errorsElement.Add(CreateErrorElement(error));
+            }
+
+            element.SetAttributeValue("name", assemblyPath);
+
+            if (this.environmentOpt != null)
+            {
+                element.SetAttributeValue("environment", this.environmentOpt);
+            }
+
+            if (this.xunitVersionOpt != null)
+            {
+                element.SetAttributeValue("test-framework", "xUnit.net " + this.xunitVersionOpt);
+            }
+
+            element.SetAttributeValue("run-date", this.localStartTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+            element.SetAttributeValue("run-time", this.localStartTime.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
+
+            var configFile = assemblyPath + ".config";
+            if (File.Exists(configFile))
+            {
+                element.SetAttributeValue("config-file", configFile);
+            }
+
+            element.SetAttributeValue("total", total);
+            element.SetAttributeValue("passed", passed);
+            element.SetAttributeValue("failed", failed);
+            element.SetAttributeValue("skipped", skipped);
+            element.SetAttributeValue("time", time.TotalSeconds.ToString("N3", CultureInfo.InvariantCulture));
+            element.SetAttributeValue("errors", errors);
+
+            return element;
         }
     }
 }
-

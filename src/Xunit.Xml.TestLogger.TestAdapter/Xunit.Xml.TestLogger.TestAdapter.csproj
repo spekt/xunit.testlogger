@@ -1,16 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../scripts/version.props" />
+
+  <PropertyGroup>
+    <SourceRoot Condition="$(SourceRoot) == ''">..\..\</SourceRoot>
+  </PropertyGroup>
+  <Import Project="$(SourceRoot)scripts/settings.targets" />
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <AssemblyName>Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter</AssemblyName>
     <Version>$(PackageVersion)</Version>
     <IsPackable>false</IsPackable>
+
+    <!-- Disable stylecop since the files are already checked in TestLogger project -->
+    <StylecopEnabled>false</StylecopEnabled>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\Xunit.Xml.TestLogger\XunitXmlTestLogger.cs">
       <Link>XunitXmlTestLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Xunit.Xml.TestLogger\TestResultInfo.cs">
+      <Link>TestResultInfo.cs</Link>
     </Compile>
   </ItemGroup>
 
