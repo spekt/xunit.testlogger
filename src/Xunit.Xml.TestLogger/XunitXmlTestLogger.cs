@@ -138,7 +138,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                         result.TestCase.Source,
                         typeName,
                         methodName,
-                        result.TestCase.DisplayName,
+                        result.DisplayName,
                         result.Duration,
                         result.ErrorMessage,
                         result.ErrorStackTrace,
