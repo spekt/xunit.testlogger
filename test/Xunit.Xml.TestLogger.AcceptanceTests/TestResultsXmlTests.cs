@@ -314,7 +314,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             Assert.Equal(string.Empty, failureXmlNode.SelectSingleNode("stack-trace").InnerText);
         }
 
-        [Fact(Skip = "AppVeyor-Test does not work as expected. Disabling for now.")]
+        [Fact]
         public void SkippedTestElementShouldContainSkippingReason()
         {
             XmlNode skippedTestNode = this.GetATestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.SkipTest11");
