@@ -6,6 +6,8 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -131,7 +133,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode assemblyNode = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssemblyElement);
 
-            Assert.Equal("4", assemblyNode.Attributes["total"].Value);
+            Assert.Equal("5", assemblyNode.Attributes["total"].Value);
         }
 
         [Fact]
@@ -155,7 +157,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode assemblyNode = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssemblyElement);
 
-            Assert.Equal("0", assemblyNode.Attributes["skipped"].Value);
+            Assert.Equal("1", assemblyNode.Attributes["skipped"].Value);
         }
 
         [Fact]
@@ -198,7 +200,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode unitTest1Collection = this.GetUnitTest1Collection();
 
-            Assert.Equal("2", unitTest1Collection.Attributes["total"].Value);
+            Assert.Equal("3", unitTest1Collection.Attributes["total"].Value);
         }
 
         [Fact]
@@ -222,7 +224,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode unitTest1Collection = this.GetUnitTest1Collection();
 
-            Assert.Equal("0", unitTest1Collection.Attributes["skipped"].Value);
+            Assert.Equal("1", unitTest1Collection.Attributes["skipped"].Value);
         }
 
         [Fact]
@@ -235,17 +237,17 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         }
 
         [Fact]
-        public void CollectionElementShouldContainsTwoTestsElemets()
+        public void CollectionElementShouldContainThreeTestsElemets()
         {
             XmlNode unitTest1Collection = this.GetUnitTest1Collection();
 
-            Assert.True(unitTest1Collection.SelectNodes("test").Count == 2);
+            Assert.True(unitTest1Collection.SelectNodes("test").Count == 3);
         }
 
         [Fact]
         public void TestElementTypeAttributeShouldHaveCorrectValue()
         {
-            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
             Assert.Equal("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1", failedTestXmlNode.Attributes["type"].Value);
         }
@@ -253,7 +255,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementMethodAttributeShouldHaveCorrectValue()
         {
-            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
             Assert.Equal("FailTest11", failedTestXmlNode.Attributes["method"].Value);
         }
@@ -261,7 +263,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementTimeAttributeShouldHaveValidFormatValue()
         {
-            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
             Regex regex = new Regex(@"^\d{1,}\.\d{7,7}$");
 
@@ -271,7 +273,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void TestElementShouldHaveTraits()
         {
-            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
             // TODO add traits to tests and update the assert.
             Assert.Equal(string.Empty, failedTestXmlNode.SelectSingleNode("traits").InnerText);
@@ -280,7 +282,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void FailedTestElementResultAttributeShouldHaveValueFail()
         {
-            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
             Assert.Equal("Fail", failedTestXmlNode.Attributes["result"].Value);
         }
@@ -288,7 +290,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void PassedTestElementResultAttributeShouldHaveValuePass()
         {
-            XmlNode passedTestXmlNode = this.GetFailedTestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.PassTest11");
+            XmlNode passedTestXmlNode = this.GetATestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.PassTest11");
 
             Assert.Equal("Pass", passedTestXmlNode.Attributes["result"].Value);
         }
@@ -296,7 +298,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void FailedTestElementShouldContainsFailureDetails()
         {
-            XmlNode failedTestXmlNode = this.GetFailedTestXmlNode();
+            XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
             var failureNodeList = failedTestXmlNode.SelectNodes("failure");
 
@@ -312,18 +314,29 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             Assert.Equal(string.Empty, failureXmlNode.SelectSingleNode("stack-trace").InnerText);
         }
 
-        private XmlNode GetFailedTestXmlNode(string queryTestName = "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.FailTest11")
+        [Fact]
+        public void SkippedTestElementShouldContainSkippingReason()
+        {
+            XmlNode skippedTestNode = this.GetATestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.SkipTest11");
+            var reasonNodes = skippedTestNode.SelectNodes("reason");
+
+            Assert.True(reasonNodes.Count == 1);
+
+            var reasonNode = reasonNodes[0].FirstChild;
+            Assert.IsType<XmlCDataSection>(reasonNode);
+
+            XmlCDataSection reasonData = (XmlCDataSection)reasonNode;
+
+            string expectedReason = "Skipped";
+            Assert.Equal(expectedReason, reasonData.Value);
+        }
+
+        private XmlNode GetATestXmlNode(string queryTestName = "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.FailTest11")
         {
             XmlNode unitTest1Collection = this.GetUnitTest1Collection();
-            XmlNode failedTestXmlNode = null;
 
-            var testNodes = unitTest1Collection.SelectNodes("test");
-            Assert.True(testNodes.Count == 2);
-
-            var testName = testNodes[0].Attributes["name"].Value;
-            failedTestXmlNode = queryTestName.Equals(testName) ? testNodes[0] : testNodes[1];
-
-            return failedTestXmlNode;
+            var testNodes = unitTest1Collection.SelectNodes($"test[@name=\"{queryTestName}\"]");
+            return testNodes.Item(0);
         }
 
         private XmlNode GetUnitTest1Collection()

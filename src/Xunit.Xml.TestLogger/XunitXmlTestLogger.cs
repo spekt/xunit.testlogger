@@ -5,7 +5,6 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -56,6 +55,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         };
 
         private readonly object resultsGuard = new object();
+        private readonly object messagesGuard = new object();
 
         private string outputFilePath;
 
@@ -64,6 +64,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         private string xunitVersionOpt;
 
         private List<TestResultInfo> results;
+        private List<string> messages;
 
         private DateTime localStartTime;
 
@@ -119,6 +120,10 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         /// </summary>
         internal void TestMessageHandler(object sender, TestRunMessageEventArgs e)
         {
+            lock (this.messagesGuard)
+            {
+                this.messages.Add(e.Message);
+            }
         }
 
         /// <summary>
@@ -160,6 +165,15 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 this.results = new List<TestResultInfo>();
             }
 
+            List<string> messageList;
+            lock (this.messagesGuard)
+            {
+                messageList = this.messages;
+                this.messages = new List<string>();
+            }
+
+            FillInReasonsOfSkippedTests(resultList, messageList);
+
             var doc = new XDocument(this.CreateAssembliesElement(resultList));
 
             // Create directory if not exist
@@ -176,6 +190,40 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
 
             var resultsFileMessage = string.Format(CultureInfo.CurrentCulture, "Results File: {0}", this.outputFilePath);
             Console.WriteLine(resultsFileMessage);
+        }
+
+        private static void FillInReasonsOfSkippedTests(List<TestResultInfo> resultsGettingFilled, List<string> messageList)
+        {
+            // process all the messages collected during test run: If one ends with [SKIP], then the next message contains the
+            // skip reason.
+            Dictionary<string, string> skippedTestNamesWithReason = new Dictionary<string, string>();
+            for (int i = 0; i < messageList.Count; i++)
+            {
+                string message = messageList[i];
+                if (!message.EndsWith("[SKIP]"))
+                {
+                    continue;
+                }
+
+                // remove the gunk ...
+                int from = message.IndexOf("]") + 1;
+                int to = message.LastIndexOf("[") - from;
+                string testName = message.Substring(from, to).Trim();
+
+                string reasonMessage = messageList[++i];
+                from = reasonMessage.IndexOf("]") + 1;
+                string reason = reasonMessage.Substring(from).Trim();
+
+                skippedTestNamesWithReason.Add(testName, reason);
+            }
+
+            foreach (var testWithReason in skippedTestNamesWithReason)
+            {
+                TestResultInfo result = resultsGettingFilled.Single(x => x.Name == testWithReason.Key);
+
+                // TODO: Defining a new category for now...
+                result.Messages.Add(new TestResultMessage("skipReason", testWithReason.Value));
+            }
         }
 
         private static XElement CreateErrorElement(TestResultInfo result)
@@ -300,6 +348,11 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 if (TestResultMessage.StandardOutCategory.Equals(m.Category, StringComparison.OrdinalIgnoreCase))
                 {
                     stdOut.AppendLine(m.Text);
+                }
+                else if (m.Category == "skipReason")
+                {
+                    // TODO using the self-defined category skipReason for now
+                    element.Add(new XElement("reason", new XCData(RemoveInvalidXmlChar(m.Text))));
                 }
             }
 
@@ -427,6 +480,11 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             lock (this.resultsGuard)
             {
                 this.results = new List<TestResultInfo>();
+            }
+
+            lock (this.messagesGuard)
+            {
+                this.messages = new List<string>();
             }
 
             this.localStartTime = DateTime.Now;
