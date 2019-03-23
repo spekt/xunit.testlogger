@@ -15,6 +15,11 @@ namespace Xunit.Xml.TestLogger.NetCore.Tests
         {
             Assert.False(true);
         }
+
+        [Fact(Skip="Skipped")]
+        public void SkipTest11()
+        {
+        }
     }
 
     public class UnitTest2
