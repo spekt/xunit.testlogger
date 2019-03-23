@@ -8,6 +8,9 @@ build_script:
     - cmd: dotnet pack -c Release -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
     - cmd: dotnet test test/Xunit.Xml.TestLogger.AcceptanceTests/Xunit.Xml.TestLogger.AcceptanceTests.csproj
 
+on_failure:
+  - ps: Push-AppveyorArtifact test\assets\Xunit.Xml.TestLogger.NetCore.Tests\test-results.xml
+
 test: off
 
 artifacts:
