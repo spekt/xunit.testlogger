@@ -320,7 +320,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             XmlNode skippedTestNode = this.GetATestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.SkipTest11");
             var reasonNodes = skippedTestNode.SelectNodes("reason");
 
-            Assert.True(reasonNodes.Count == 1);
+            Assert.Equal(1, reasonNodes.Count);
 
             var reasonNode = reasonNodes[0].FirstChild;
             Assert.IsType<XmlCDataSection>(reasonNode);
