@@ -6,7 +6,7 @@ clone_depth: 1
 build_script:
     - cmd: dotnet pack -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
     - cmd: dotnet pack -c Release -p:PackageVersion=%APPVEYOR_BUILD_VERSION%
-    - cmd: dotnet test test/Xunit.Xml.TestLogger.AcceptanceTests/Xunit.Xml.TestLogger.AcceptanceTests.csproj
+    - cmd: dotnet test -p:PackageVersion=%APPVEYOR_BUILD_VERSION% test/Xunit.Xml.TestLogger.AcceptanceTests/Xunit.Xml.TestLogger.AcceptanceTests.csproj
 
 on_failure:
   - ps: Push-AppveyorArtifact test\assets\Xunit.Xml.TestLogger.NetCore.Tests\test-results.xml
