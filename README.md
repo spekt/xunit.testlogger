@@ -20,13 +20,13 @@ Xunit logger can generate xml reports in the xunit v2 format (https://xunit.gith
 1. Add a reference to the [Xunit Logger](https://www.nuget.org/packages/XunitXml.TestLogger) nuget package in test project
 2. Use the following command line in tests
 ```
-> dotnet test --test-adapter-path:. --logger:xunit
+> dotnet test --logger:xunit
 ```
 3. Test results are generated in the `TestResults` directory relative to the `test.csproj`
 
 A path for the report file can be specified as follows:
 ```
-> dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=test_result.xml"
+> dotnet test --logger:"xunit;LogFilePath=test_result.xml"
 ```
 
 `test_result.xml` will be generated in the same directory as `test.csproj`.
