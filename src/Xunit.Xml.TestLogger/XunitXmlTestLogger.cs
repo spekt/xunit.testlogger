@@ -339,7 +339,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 new XAttribute("name", result.Name),
                 new XAttribute("type", result.Type),
                 new XAttribute("method", result.Method),
-                new XAttribute("time", result.Time.TotalSeconds.ToString("N7", CultureInfo.InvariantCulture)),
+                new XAttribute("time", result.Time.TotalSeconds.ToString("F7", CultureInfo.InvariantCulture)),
                 new XAttribute("result", OutcomeToString(result.Outcome)));
 
             StringBuilder stdOut = new StringBuilder();
