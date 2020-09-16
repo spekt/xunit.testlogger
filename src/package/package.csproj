@@ -28,13 +28,14 @@
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
 
     <!-- Disable warning that there are no source files. It is intentional. -->
-    <NoWarn>$(NoWarn);2008</NoWarn>
+    <NoWarn>$(NoWarn);2008;NU5127</NoWarn>
 
     <!-- Nuget pack configuration -->
     <NuspecFile>bin\$(Configuration)\$(TargetFramework)\XunitXml.TestLogger.nuspec</NuspecFile>
     <NuspecProperties>version=$(Version)</NuspecProperties>
     <IncludeContentInPack>false</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageIcon>packageIcon.png</PackageIcon>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,6 +52,19 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Stylecop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="packageIcon.png" Pack="true" PackagePath="">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
   <!--<Target Name="AfterBuild">-->
     <!--<Copy SourceFiles="XunitXml.TestLogger.props" DestinationFolder="build\netstandard1.0" SkipUnchangedFiles="true" />-->
     <!--<Copy SourceFiles="XunitXml.TestLogger.props" DestinationFolder="build\net45" SkipUnchangedFiles="true" />-->
