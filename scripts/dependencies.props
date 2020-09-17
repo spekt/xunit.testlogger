@@ -10,6 +10,6 @@
     <XunitVersion>2.3.1</XunitVersion>
     <XunitTestAdapterVersion>2.3.1</XunitTestAdapterVersion>
 
-    <StylecopVersion>1.1.0-beta009</StylecopVersion>
+    <StylecopVersion>1.1.118</StylecopVersion>
   </PropertyGroup>
 </Project>
