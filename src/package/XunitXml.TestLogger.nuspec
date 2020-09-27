@@ -4,16 +4,18 @@
     <id>XunitXml.TestLogger</id>
     <version>$version$</version>
     <title>XunitXml.TestLogger</title>
-    <authors>codito,faizan2304,smadala</authors>
-    <owners>codito,faizan2304,smadala</owners>
+    <authors>codito,siphonophora,faizan2304,smadala</authors>
+    <owners>codito,siphonophora,faizan2304,smadala</owners>
     <projectUrl>https://github.com/spekt/xunit.testlogger</projectUrl>
     <description>Xml logger for xunit when test is running with "dotnet test" or "dotnet vstest".</description>
     <license type="expression">MIT</license>
+    <icon>packageIcon.png</icon>
   </metadata>
   <files>
     <file src="Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger.dll" target="build\_common\" />
     <file src="Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter.dll" target="build\_common\" />
-
+    <file src="packageIcon.png" target="\" />
+    
     <!-- Net Core -->
     <file src="XunitXml.TestLogger.props" target="build\netstandard1.0\" />
 
