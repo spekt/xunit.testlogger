@@ -3,6 +3,7 @@ Xunit logger extensions for [Visual Studio Test Platform](https://github.com/mic
 
 [![Build Status](https://travis-ci.com/spekt/xunit.testlogger.svg?branch=master)](https://travis-ci.com/spekt/xunit.testlogger)
 [![Build status](https://ci.appveyor.com/api/projects/status/73iw12g89lhlr9ir?svg=true)](https://ci.appveyor.com/project/spekt/xunit-testlogger)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/XunitXml.TestLogger)](https://www.nuget.org/packages/XunitXml.TestLogger/)
 
 ## Packages
 | Logger | Stable Package | Pre-release Package |
