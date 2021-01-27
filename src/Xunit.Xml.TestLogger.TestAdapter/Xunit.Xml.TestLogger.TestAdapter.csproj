@@ -19,13 +19,17 @@
     <Compile Include="..\Xunit.Xml.TestLogger\XunitXmlTestLogger.cs">
       <Link>XunitXmlTestLogger.cs</Link>
     </Compile>
+    <Compile Include="..\Xunit.Xml.TestLogger\XunitXmlSerializer.cs">
+      <Link>XunitXmlSerializer.cs</Link>
+    </Compile>
     <Compile Include="..\Xunit.Xml.TestLogger\TestResultInfo.cs">
       <Link>TestResultInfo.cs</Link>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.0.0" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.5.0" />
+    <PackageReference Include="Spekt.TestLogger" Version="$(TestLoggerVersion)" />
     <PackageReference Include="System.ValueTuple" Version="4.3.0" />
   </ItemGroup>
 </Project>
