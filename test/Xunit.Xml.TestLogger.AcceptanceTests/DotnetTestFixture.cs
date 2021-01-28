@@ -9,6 +9,8 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
 
     public class DotnetTestFixture : IDisposable
     {
+        private const string DotnetVersion = "netcoreapp3.1";
+
         public DotnetTestFixture()
         {
             var testProject = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "..", "assets", "Xunit.Xml.TestLogger.NetCore.Tests"));
@@ -24,7 +26,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             // Log the contents of test output directory. Useful to verify if the logger is copied
             Console.WriteLine("------------");
             Console.WriteLine("Contents of test output directory:");
-            foreach (var f in Directory.GetFiles(Path.Combine(testProject, "bin/Debug/netcoreapp2.0")))
+            foreach (var f in Directory.GetFiles(Path.Combine(testProject, $"bin/Debug/{DotnetVersion}")))
             {
                 Console.WriteLine("  " + f);
             }

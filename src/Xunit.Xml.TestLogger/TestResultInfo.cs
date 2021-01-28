@@ -11,6 +11,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
     // Disabling warning CS0659: 'XunitXmlTestLogger.TestResultInfo' overrides Object.Equals(object o) but does not override Object.GetHashCode()
     // As this is a false alarm here.
 #pragma warning disable 0659
+#if NONE
     public class TestResultInfo
     {
         public TestResultInfo(
@@ -76,4 +77,5 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             return false;
         }
     }
+#endif
 }
