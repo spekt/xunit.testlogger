@@ -82,7 +82,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             int failed = 0;
             int skipped = 0;
             int errors = 0;
-            var time = TimeSpan.Zero;
+            var time = runConfiguration.EndTime - runConfiguration.StartTime;
 
             var element = new XElement("assembly");
             XElement errorsElement = new XElement("errors");
@@ -95,7 +95,6 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 failed += collection.failed;
                 skipped += collection.skipped;
                 errors += collection.error;
-                time += collection.time;
 
                 element.Add(collection.element);
             }
