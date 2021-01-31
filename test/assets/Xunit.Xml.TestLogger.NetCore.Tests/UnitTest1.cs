@@ -36,4 +36,13 @@ namespace Xunit.Xml.TestLogger.NetCore.Tests
             Assert.False(true);
         }
     }
+
+    public class UnitTest3
+    {
+        [Theory]
+        [InlineData("Head\x80r")]    // See issue #25
+        public void TestInvalidName(string input)
+        {
+        }
+    }
 }
