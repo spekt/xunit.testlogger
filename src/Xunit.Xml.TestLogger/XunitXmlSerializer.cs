@@ -9,10 +9,10 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Xml.Linq;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Spekt.TestLogger.Core;
+    using Spekt.TestLogger.Utilities;
 
     public class XunitXmlSerializer : ITestResultSerializer
     {
@@ -166,8 +166,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         private static XElement CreateFailureElement(string exceptionType, string message, string stackTrace)
         {
             XElement failureElement = new XElement("failure", new XAttribute("exception-type", exceptionType));
-            failureElement.Add(new XElement("message", RemoveInvalidXmlChar(message)));
-            failureElement.Add(new XElement("stack-trace", RemoveInvalidXmlChar(stackTrace)));
+            failureElement.Add(new XElement("message", message.ReplaceInvalidXmlChar()));
+            failureElement.Add(new XElement("stack-trace", stackTrace.ReplaceInvalidXmlChar()));
 
             return failureElement;
         }
@@ -248,7 +248,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         {
             var element = new XElement(
                 "test",
-                new XAttribute("name", result.Name),
+                new XAttribute("name", result.Name.ReplaceInvalidXmlChar()),
                 new XAttribute("type", result.FullTypeName),
                 new XAttribute("method", result.Method),
                 new XAttribute("time", result.Duration.TotalSeconds.ToString("F7", CultureInfo.InvariantCulture)),
@@ -264,13 +264,13 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 else if (m.Category == "skipReason")
                 {
                     // Using the self-defined category skipReason for now
-                    element.Add(new XElement("reason", new XCData(RemoveInvalidXmlChar(m.Text))));
+                    element.Add(new XElement("reason", new XCData(m.Text.ReplaceInvalidXmlChar())));
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(stdOut.ToString()))
             {
-                element.Add(new XElement("output", RemoveInvalidXmlChar(stdOut.ToString())));
+                element.Add(new XElement("output", stdOut.ToString().ReplaceInvalidXmlChar()));
             }
 
             var fileName = result.TestCase.CodeFilePath;
@@ -284,8 +284,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             {
                 element.Add(new XElement(
                     "failure",
-                    new XElement("message", RemoveInvalidXmlChar(result.ErrorMessage)),
-                    new XElement("stack-trace", RemoveInvalidXmlChar(result.ErrorStackTrace))));
+                    new XElement("message", result.ErrorMessage.ReplaceInvalidXmlChar()),
+                    new XElement("stack-trace", result.ErrorStackTrace.ReplaceInvalidXmlChar())));
             }
 
             if (result.Traits != null)
@@ -314,28 +314,6 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 default:
                     return "Unknown";
             }
-        }
-
-        private static string RemoveInvalidXmlChar(string str)
-        {
-            if (str != null)
-            {
-                // From xml spec (http://www.w3.org/TR/xml/#charsets) valid chars:
-                // #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
-
-                // we are handling only #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD]
-                // because C# support unicode character in range \u0000 to \uFFFF
-                MatchEvaluator evaluator = new MatchEvaluator(ReplaceInvalidCharacterWithUniCodeEscapeSequence);
-                string invalidChar = @"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]";
-                return Regex.Replace(str, invalidChar, evaluator);
-            }
-
-            return str;
-        }
-
-        private static string ReplaceInvalidCharacterWithUniCodeEscapeSequence(Match match)
-        {
-            return string.Format(@"\u{0:x4}", (ushort)match.Value[0]);
         }
     }
 }

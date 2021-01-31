@@ -4,6 +4,7 @@
 namespace Xunit.Xml.TestLogger.AcceptanceTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -133,7 +134,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode assemblyNode = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssemblyElement);
 
-            Assert.Equal("5", assemblyNode.Attributes["total"].Value);
+            Assert.Equal("6", assemblyNode.Attributes["total"].Value);
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode assemblyNode = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssemblyElement);
 
-            Assert.Equal("2", assemblyNode.Attributes["passed"].Value);
+            Assert.Equal("3", assemblyNode.Attributes["passed"].Value);
         }
 
         [Fact]
@@ -192,7 +193,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNodeList collectionElementNodeList = this.testResultsXmlDocument.SelectNodes(TestResultsXmlTests.CollectionElement);
 
-            Assert.True(collectionElementNodeList.Count == 2);
+            Assert.Equal(3, collectionElementNodeList.Count);
         }
 
         [Fact]
@@ -237,11 +238,23 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         }
 
         [Fact]
-        public void CollectionElementShouldContainThreeTestsElemets()
+        public void CollectionElementShouldContainThreeTestsElements()
         {
             XmlNode unitTest1Collection = this.GetUnitTest1Collection();
 
             Assert.True(unitTest1Collection.SelectNodes("test").Count == 3);
+        }
+
+        [Fact]
+        public void TestElementNameAttributeShouldBeEscaped()
+        {
+            var testNodes = this.GetTestXmlNodePartial(
+                "UnitTest3",
+                @"Xunit.Xml.TestLogger.NetCore.Tests.UnitTest3.TestInvalidName");
+
+            Assert.Equal(
+                "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest3.TestInvalidName(input: \"Head\\u0080r\")",
+                testNodes.Item(0).Attributes["name"].Value);
         }
 
         [Fact]
@@ -290,7 +303,9 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void PassedTestElementResultAttributeShouldHaveValuePass()
         {
-            XmlNode passedTestXmlNode = this.GetATestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.PassTest11");
+            XmlNode passedTestXmlNode = this.GetATestXmlNode(
+                "UnitTest1",
+                "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.PassTest11");
 
             Assert.Equal("Pass", passedTestXmlNode.Attributes["result"].Value);
         }
@@ -317,7 +332,9 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         [Fact]
         public void SkippedTestElementShouldContainSkippingReason()
         {
-            XmlNode skippedTestNode = this.GetATestXmlNode("Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.SkipTest11");
+            XmlNode skippedTestNode = this.GetATestXmlNode(
+                "UnitTest1",
+                "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.SkipTest11");
             var reasonNodes = skippedTestNode.SelectNodes("reason");
 
             Assert.Equal(1, reasonNodes.Count);
@@ -331,27 +348,38 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
             Assert.Equal(expectedReason, reasonData.Value);
         }
 
-        private XmlNode GetATestXmlNode(string queryTestName = "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.FailTest11")
+        private XmlNode GetATestXmlNode(
+            string collectionName = "UnitTest1",
+            string queryTestName = "Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1.FailTest11")
         {
-            XmlNode unitTest1Collection = this.GetUnitTest1Collection();
+            var unitTest1Collection = this.GetUnitTestCollection(collectionName);
 
             var testNodes = unitTest1Collection.SelectNodes($"test[@name=\"{queryTestName}\"]");
             return testNodes.Item(0);
         }
 
+        private XmlNodeList GetTestXmlNodePartial(
+            string collectionName,
+            string testName)
+        {
+            var unitTest1Collection = this.GetUnitTestCollection(collectionName);
+
+            var testNodes = unitTest1Collection.SelectNodes($"test[contains(@name, \"{testName}\")]");
+            return testNodes;
+        }
+
+        private XmlNode GetUnitTestCollection(string name)
+        {
+            var testNodes = this.testResultsXmlDocument.SelectNodes(
+                $"//assemblies/assembly/collection[contains(@name, \"{name}\")]");
+
+            Assert.Equal(1, testNodes.Count);
+            return testNodes.Item(0);
+        }
+
         private XmlNode GetUnitTest1Collection()
         {
-            XmlNodeList collectionElementNodeList =
-                this.testResultsXmlDocument.SelectNodes(TestResultsXmlTests.CollectionElement);
-
-            Assert.True(collectionElementNodeList.Count == 2);
-
-            XmlNode unitTest1Collection = null;
-            var firstCollectionName = collectionElementNodeList[0].Attributes["name"];
-            unitTest1Collection = "Test collection for Xunit.Xml.TestLogger.NetCore.Tests.UnitTest1".Equals(firstCollectionName.Value)
-                ? collectionElementNodeList[0] : collectionElementNodeList[1];
-
-            return unitTest1Collection;
+            return this.GetUnitTestCollection("UnitTest1");
         }
     }
 }
