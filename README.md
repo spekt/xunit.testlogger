@@ -34,5 +34,9 @@ A path for the report file can be specified as follows:
 
 **Note:** the arguments to `--logger` should be in quotes since `;` is treated as a command delimiter in shell.
 
+All common options to the logger is documented [in the wiki][config-wiki].
+
+[config-wiki]: https://github.com/spekt/testlogger/wiki/Logger-Configuration
+
 ## License
 MIT
