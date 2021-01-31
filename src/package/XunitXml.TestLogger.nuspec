@@ -4,8 +4,8 @@
     <id>XunitXml.TestLogger</id>
     <version>$version$</version>
     <title>XunitXml.TestLogger</title>
-    <authors>codito,siphonophora,faizan2304,smadala</authors>
-    <owners>codito,siphonophora,faizan2304,smadala</owners>
+    <authors>spekt</authors>
+    <owners>spekt</owners>
     <projectUrl>https://github.com/spekt/xunit.testlogger</projectUrl>
     <description>Xml logger for xunit when test is running with "dotnet test" or "dotnet vstest".</description>
     <license type="expression">MIT</license>
