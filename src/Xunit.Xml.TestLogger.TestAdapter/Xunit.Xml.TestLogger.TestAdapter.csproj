@@ -22,9 +22,6 @@
     <Compile Include="..\Xunit.Xml.TestLogger\XunitXmlSerializer.cs">
       <Link>XunitXmlSerializer.cs</Link>
     </Compile>
-    <Compile Include="..\Xunit.Xml.TestLogger\TestResultInfo.cs">
-      <Link>TestResultInfo.cs</Link>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
