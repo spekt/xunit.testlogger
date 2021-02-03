@@ -2,9 +2,11 @@
 
 ## Unreleased (v3.1.x)
 
+## v3.0.62 - 2021/02/03
+
 - Remove unused code from refactoring. See #31
-- Use `TestResultInfo.TestCase.Traits` instead of `TestResultInfo.Traits`. See
-  #32
+- Ensure Traits for Tests are available in the report. Use `TestResultInfo.TestCase.Traits` 
+  instead of `TestResultInfo.Traits`. See #32
 
 ## v3.0.56 - 2021/01/31
 
