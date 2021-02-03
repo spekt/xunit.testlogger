@@ -2,6 +2,10 @@
 
 ## Unreleased (v3.1.x)
 
+- Remove unused code from refactoring. See #31
+- Use `TestResultInfo.TestCase.Traits` instead of `TestResultInfo.Traits`. See
+  #32
+
 ## v3.0.56 - 2021/01/31
 
 - Refactor to support [core testlogger][]
