@@ -288,8 +288,11 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode failedTestXmlNode = this.GetATestXmlNode();
 
-            // TODO add traits to tests and update the assert.
-            Assert.Equal(string.Empty, failedTestXmlNode.SelectSingleNode("traits").InnerText);
+            var traits = failedTestXmlNode.SelectSingleNode("traits")?.ChildNodes;
+            Assert.NotNull(traits);
+            Assert.Equal(1, traits.Count);
+            Assert.Equal("Category", traits[0].Attributes["name"].Value);
+            Assert.Equal("DummyCategory", traits[0].Attributes["value"].Value);
         }
 
         [Fact]

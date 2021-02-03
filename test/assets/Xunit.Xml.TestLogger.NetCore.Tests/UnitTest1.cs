@@ -11,6 +11,7 @@ namespace Xunit.Xml.TestLogger.NetCore.Tests
         }
 
         [Fact]
+        [Trait("Category", "DummyCategory")]
         public void FailTest11()
         {
             Assert.False(true);

@@ -288,9 +288,9 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                     new XElement("stack-trace", result.ErrorStackTrace.ReplaceInvalidXmlChar())));
             }
 
-            if (result.Traits != null)
+            if (result.TestCase.Traits != null)
             {
-                var traits = from trait in result.Traits
+                var traits = from trait in result.TestCase.Traits
                              select new XElement("trait", new XAttribute("name", trait.Name), new XAttribute("value", trait.Value));
                 element.Add(new XElement("traits", traits));
             }
