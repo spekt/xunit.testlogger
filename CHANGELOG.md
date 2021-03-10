@@ -2,7 +2,7 @@
 
 ## Unreleased (v3.1.x)
 
-## v3.0.xx - 2021/03/10
+## v3.0.66 - 2021/03/10
 
 - Upgrade testlogger to 3.0.31
 - Fix: overwrite test result file if it already exists. See
