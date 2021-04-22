@@ -16,7 +16,7 @@ If you're looking for `nunit`, `junit` or `appveyor` loggers, visit following re
 * <https://github.com/spekt/appveyor.testlogger>
 
 ## Usage
-Xunit logger can generate xml reports in the xunit v2 format (https://xunit.github.io/docs/format-xml-v2.html).
+Xunit logger can generate xml reports in the xunit v2 format (https://xunit.net/docs/format-xml-v2).
 
 1. Add a reference to the [Xunit Logger](https://www.nuget.org/packages/XunitXml.TestLogger) nuget package in test project
 2. Use the following command line in tests
