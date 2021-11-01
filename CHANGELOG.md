@@ -2,7 +2,7 @@
 
 ## Unreleased (v3.1.x)
 
-## v3.0.xx - 2021/11/01
+## v3.0.70 - 2021/11/01
 
 - Upgrade testlogger to 3.0.47
 - Fix: generate test results when used along with JUnit.TestLogger. See
