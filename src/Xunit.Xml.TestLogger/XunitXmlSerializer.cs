@@ -42,7 +42,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         public string Serialize(
             LoggerConfiguration loggerConfiguration,
             TestRunConfiguration runConfiguration,
-            List<TestResultInfo> results)
+            List<TestResultInfo> results,
+            List<TestMessageInfo> messages)
         {
             var doc = new XDocument(CreateAssembliesElement(results, loggerConfiguration, runConfiguration));
             return doc.ToString();
@@ -248,7 +249,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         {
             var element = new XElement(
                 "test",
-                new XAttribute("name", result.Name.ReplaceInvalidXmlChar()),
+                new XAttribute("name", result.TestCase.DisplayName.ReplaceInvalidXmlChar()),
                 new XAttribute("type", result.FullTypeName),
                 new XAttribute("method", result.Method),
                 new XAttribute("time", result.Duration.TotalSeconds.ToString("F7", CultureInfo.InvariantCulture)),

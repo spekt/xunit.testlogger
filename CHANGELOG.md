@@ -2,6 +2,13 @@
 
 ## Unreleased (v3.1.x)
 
+## v3.0.xx - 2021/11/01
+
+- Upgrade testlogger to 3.0.47
+- Fix: generate test results when used along with JUnit.TestLogger. See
+https://github.com/spekt/xunit.testlogger/issues/36 and
+https://github.com/spekt/xunit.testlogger/issues/37
+
 ## v3.0.66 - 2021/03/10
 
 - Upgrade testlogger to 3.0.31
