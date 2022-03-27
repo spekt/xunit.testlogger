@@ -1,6 +1,7 @@
 # Changelog
 
-## Unreleased (v3.1.x)
+## All versions staring in 2022
+A changelog is maintained on the releases page of the [XUnit Test Logger GitHub repository](https://github.com/spekt/xunit.testlogger/).
 
 ## v3.0.70 - 2021/11/01
 
