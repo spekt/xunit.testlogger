@@ -1,7 +1,22 @@
 # Changelog
 
-## All versions staring in 2022
-A changelog is maintained on the releases page of the [XUnit Test Logger GitHub repository](https://github.com/spekt/xunit.testlogger/).
+## Unreleased (v3.1.x)
+
+- Update core testlogger to 3.0.78 for xunit test adapter
+- Fix: Explicit tests should be marked as Skipped. See
+  https://github.com/spekt/nunit.testlogger/issues/86
+- Replace Test Case name parser **Possible Breaking Change**
+    - For most or maybe all users the new parser should fix the issues shown below, without introducing new issues. In case you do encounter any new parsing failures a feature flag `Parser=Legacy` has been added to use the prior parser. See [logger config wiki](https://github.com/spekt/testlogger/wiki/Logger-Configuration) for details. 
+    - Fix: Test case parse error if name contains special characters. See
+  https://github.com/spekt/nunit.testlogger/issues/90
+    - Fix: Covers several parsing issues. Thanks @becha2 for all the detailed examples.
+       https://github.com/spekt/testlogger/issues/28
+    - Fix: Log member data. Thanks @BottlecapDave for the issue report and @hach-que for the draft fix. 
+      https://github.com/spekt/junit.testlogger/issues/50
+    - Fix: Issue parsing chars. Thanks @binarycow for the issue report.
+       https://github.com/spekt/nunit.testlogger/issues/90
+    - Reduce log verbosity: The parser, if it encounters problems, will only output one warning per run to the console instead of one per problem
+
 
 ## v3.0.70 - 2021/11/01
 
