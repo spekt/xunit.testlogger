@@ -2,7 +2,9 @@
 
 ## Unreleased (v3.1.x)
 
-- Update core testlogger to 3.0.78 for xunit test adapter
+## v3.0.78 - 2023/01/30
+
+- Update core testlogger to 3.0.86 for xunit test adapter
 - Fix: Explicit tests should be marked as Skipped. See
   https://github.com/spekt/nunit.testlogger/issues/86
 - Replace Test Case name parser **Possible Breaking Change**
@@ -16,6 +18,7 @@
     - Fix: Issue parsing chars. Thanks @binarycow for the issue report.
        https://github.com/spekt/nunit.testlogger/issues/90
     - Reduce log verbosity: The parser, if it encounters problems, will only output one warning per run to the console instead of one per problem
+    - Fix: Issue parsing numbers. See https://github.com/spekt/testlogger/issues/35
 
 
 ## v3.0.70 - 2021/11/01
