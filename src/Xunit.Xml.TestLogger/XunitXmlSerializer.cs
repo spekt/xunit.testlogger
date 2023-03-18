@@ -39,6 +39,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             { "Test Method Cleanup Failure", "test-method-cleanup" }
         };
 
+        public IInputSanitizer InputSanitizer { get; } = new InputSanitizerXml();
+
         public string Serialize(
             LoggerConfiguration loggerConfiguration,
             TestRunConfiguration runConfiguration,
