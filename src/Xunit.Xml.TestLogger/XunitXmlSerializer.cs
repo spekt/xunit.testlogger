@@ -276,11 +276,11 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 element.Add(new XElement("output", stdOut.ToString()));
             }
 
-            var fileName = result.TestCase.CodeFilePath;
+            var fileName = result.CodeFilePath;
             if (!string.IsNullOrWhiteSpace(fileName))
             {
                 element.Add(new XElement("source-file", fileName));
-                element.Add(new XElement("source-line", result.TestCase.LineNumber));
+                element.Add(new XElement("source-line", result.LineNumber));
             }
 
             if (result.Outcome == TestOutcome.Failed)
