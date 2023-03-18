@@ -251,7 +251,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         {
             var element = new XElement(
                 "test",
-                new XAttribute("name", result.TestCaseDisplayName),
+                new XAttribute("name", result.Method),
                 new XAttribute("type", result.FullTypeName),
                 new XAttribute("method", result.Method),
                 new XAttribute("time", result.Duration.TotalSeconds.ToString("F7", CultureInfo.InvariantCulture)),
