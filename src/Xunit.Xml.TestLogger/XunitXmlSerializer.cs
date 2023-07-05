@@ -39,6 +39,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
             { "Test Method Cleanup Failure", "test-method-cleanup" }
         };
 
+        public IInputSanitizer InputSanitizer { get; } = new InputSanitizerXml();
+
         public string Serialize(
             LoggerConfiguration loggerConfiguration,
             TestRunConfiguration runConfiguration,
@@ -167,8 +169,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         private static XElement CreateFailureElement(string exceptionType, string message, string stackTrace)
         {
             XElement failureElement = new XElement("failure", new XAttribute("exception-type", exceptionType));
-            failureElement.Add(new XElement("message", message.ReplaceInvalidXmlChar()));
-            failureElement.Add(new XElement("stack-trace", stackTrace.ReplaceInvalidXmlChar()));
+            failureElement.Add(new XElement("message", message));
+            failureElement.Add(new XElement("stack-trace", stackTrace));
 
             return failureElement;
         }
@@ -249,7 +251,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
         {
             var element = new XElement(
                 "test",
-                new XAttribute("name", result.TestCase.DisplayName.ReplaceInvalidXmlChar()),
+                new XAttribute("name", result.DisplayName),
                 new XAttribute("type", result.FullTypeName),
                 new XAttribute("method", result.Method),
                 new XAttribute("time", result.Duration.TotalSeconds.ToString("F7", CultureInfo.InvariantCulture)),
@@ -265,33 +267,33 @@ namespace Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger
                 else if (m.Category == "skipReason")
                 {
                     // Using the self-defined category skipReason for now
-                    element.Add(new XElement("reason", new XCData(m.Text.ReplaceInvalidXmlChar())));
+                    element.Add(new XElement("reason", new XCData(m.Text)));
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(stdOut.ToString()))
             {
-                element.Add(new XElement("output", stdOut.ToString().ReplaceInvalidXmlChar()));
+                element.Add(new XElement("output", stdOut.ToString()));
             }
 
-            var fileName = result.TestCase.CodeFilePath;
+            var fileName = result.CodeFilePath;
             if (!string.IsNullOrWhiteSpace(fileName))
             {
                 element.Add(new XElement("source-file", fileName));
-                element.Add(new XElement("source-line", result.TestCase.LineNumber));
+                element.Add(new XElement("source-line", result.LineNumber));
             }
 
             if (result.Outcome == TestOutcome.Failed)
             {
                 element.Add(new XElement(
                     "failure",
-                    new XElement("message", result.ErrorMessage.ReplaceInvalidXmlChar()),
-                    new XElement("stack-trace", result.ErrorStackTrace.ReplaceInvalidXmlChar())));
+                    new XElement("message", result.ErrorMessage),
+                    new XElement("stack-trace", result.ErrorStackTrace)));
             }
 
-            if (result.TestCase.Traits != null)
+            if (result.Traits != null)
             {
-                var traits = from trait in result.TestCase.Traits
+                var traits = from trait in result.Traits
                              select new XElement("trait", new XAttribute("name", trait.Name), new XAttribute("value", trait.Value));
                 element.Add(new XElement("traits", traits));
             }
