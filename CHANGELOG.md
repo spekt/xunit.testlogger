@@ -2,6 +2,11 @@
 
 ## Unreleased (v3.1.x)
 
+- Update core testlogger to 3.1.130.
+- Fix for illegal xml characters in various names. See https://github.com/spekt/testlogger/pull/37
+- Use DisplayName for method names. See https://github.com/spekt/xunit.testlogger/pull/46
+- Various infra fixes: move to net7.0, add github CI and remove appveyor.
+
 ## v3.0.78 - 2023/01/30
 
 - Update core testlogger to 3.0.86 for xunit test adapter
