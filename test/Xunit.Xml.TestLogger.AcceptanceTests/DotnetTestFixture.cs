@@ -40,6 +40,10 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.FileName = "dotnet";
                 p.StartInfo.Arguments = $"test --no-build {testLogger} {testProject}";
+
+                // Required to run netcoreapp3.1 without icu support on devbox (linux)
+                p.StartInfo.EnvironmentVariables.Add("DOTNET_SYSTEM_GLOBALIZATION_INVARIANT", "1");
+
                 p.Start();
 
                 Console.WriteLine("dotnet arguments: " + p.StartInfo.Arguments);
