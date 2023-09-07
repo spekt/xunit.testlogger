@@ -20,9 +20,9 @@
 
   <!-- Build test assets for acceptance tests -->
   <PropertyGroup>
-    <TestRestoreConfig>$(MSBuildThisFileDirectory)../assets/NuGet.$(Configuration).config</TestRestoreConfig>
-    <TestFullProject>$(MSBuildThisFileDirectory)../assets/Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj</TestFullProject>
-    <TestCoreProject>$(MSBuildThisFileDirectory)../assets/Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj</TestCoreProject>
+    <TestRestoreConfig>"$(MSBuildThisFileDirectory)../assets/NuGet.$(Configuration).config"</TestRestoreConfig>
+    <TestFullProject>"$(MSBuildThisFileDirectory)../assets/Xunit.Xml.TestLogger.NetFull.Tests/Xunit.Xml.TestLogger.NetFull.Tests.csproj"</TestFullProject>
+    <TestCoreProject>"$(MSBuildThisFileDirectory)../assets/Xunit.Xml.TestLogger.NetCore.Tests/Xunit.Xml.TestLogger.NetCore.Tests.csproj"</TestCoreProject>
   </PropertyGroup>
   <Target Name="TestTarget" AfterTargets="Build">
     <Message Importance="High" Text="... Building test assets" />
