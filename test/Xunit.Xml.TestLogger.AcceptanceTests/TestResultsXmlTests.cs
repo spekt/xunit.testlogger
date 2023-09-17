@@ -19,6 +19,9 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         private const string AssembliesElement = @"/assemblies";
         private const string AssemblyElement = @"/assemblies/assembly";
         private const string CollectionElement = @"/assemblies/assembly/collection";
+        private const string TotalTestsCount = "9";
+        private const string TotalPassingTestsCount = "6";
+        private const int TotalTestClassesCount = 5;
 
         private string testResultsFilePath;
         private XmlDocument testResultsXmlDocument;
@@ -134,7 +137,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode assemblyNode = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssemblyElement);
 
-            Assert.Equal("6", assemblyNode.Attributes["total"].Value);
+            Assert.Equal(TotalTestsCount, assemblyNode.Attributes["total"].Value);
         }
 
         [Fact]
@@ -142,7 +145,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNode assemblyNode = this.testResultsXmlDocument.SelectSingleNode(TestResultsXmlTests.AssemblyElement);
 
-            Assert.Equal("3", assemblyNode.Attributes["passed"].Value);
+            Assert.Equal(TotalPassingTestsCount, assemblyNode.Attributes["passed"].Value);
         }
 
         [Fact]
@@ -193,7 +196,7 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
         {
             XmlNodeList collectionElementNodeList = this.testResultsXmlDocument.SelectNodes(TestResultsXmlTests.CollectionElement);
 
-            Assert.Equal(3, collectionElementNodeList.Count);
+            Assert.Equal(TotalTestClassesCount, collectionElementNodeList.Count);
         }
 
         [Fact]
@@ -349,6 +352,17 @@ namespace Xunit.Xml.TestLogger.AcceptanceTests
 
             string expectedReason = "Skipped";
             Assert.Equal(expectedReason, reasonData.Value);
+        }
+
+        [Fact]
+        public void NestedTestClassesShouldBePresent()
+        {
+            XmlNode nestedTestNode = this.GetATestXmlNode(
+                    "ChildUnitNestedTest3332",
+                    "Xunit.Xml.TestLogger.NetCore.Tests.ParentUnitNestedTest3332+ChildUnitNestedTest3332.PassTest33321");
+            var result = nestedTestNode.Attributes["result"];
+
+            Assert.Equal("Pass", result.Value);
         }
 
         private XmlNode GetATestXmlNode(
