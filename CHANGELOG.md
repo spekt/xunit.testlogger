@@ -2,6 +2,8 @@
 
 ## Unreleased (v3.1.x)
 
+## v3.1.17 - 2023/09/17
+
 - Fix for reporting nested test classes. See #48 and
   https://github.com/spekt/testlogger/pull/41/. Thanks @pageyboy.
 - Update core testlogger to 3.1.138.
