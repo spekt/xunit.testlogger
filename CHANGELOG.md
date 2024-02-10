@@ -2,6 +2,13 @@
 
 ## Unreleased (v3.1.x)
 
+## v3.1.x - 2024/02/10
+
+- Update core testlogger to 3.1.140.
+- Fix: exclude code coverage instrumentation for test loggers. See
+  https://github.com/spekt/junit.testlogger/issues/64 and
+  https://github.com/spekt/junit.testlogger/issues/72.
+
 ## v3.1.17 - 2023/09/17
 
 - Fix for reporting nested test classes. See #48 and

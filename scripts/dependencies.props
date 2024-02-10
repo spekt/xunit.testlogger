@@ -4,7 +4,7 @@
     <MSTestVersion>3.0.4</MSTestVersion>
     <NETTestSdkVersion>17.3.2</NETTestSdkVersion>
     <MoqVersion>4.18.4</MoqVersion>
-    <TestLoggerVersion>3.1.138</TestLoggerVersion>
+    <TestLoggerVersion>3.1.140</TestLoggerVersion>
 
     <!-- Test Assets use the minimum supported versions -->
     <NETTestSdkMinimumVersion>15.5.0</NETTestSdkMinimumVersion>

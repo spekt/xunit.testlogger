@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Xunit.Xml.TestLogger\Assembly.cs" Link="Assembly.cs" />
     <Compile Include="..\Xunit.Xml.TestLogger\XunitXmlTestLogger.cs">
       <Link>XunitXmlTestLogger.cs</Link>
     </Compile>
